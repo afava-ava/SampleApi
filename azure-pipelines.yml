@@ -22,7 +22,7 @@ steps:
   - script: dotnet restore
     displayName: 'Restaurar dependencias'
 
-  - script: dotnet build --configuration Release --no-restore
+  - script: dotnet build --configuration Release
     displayName: 'Compilar proyecto'
 
   - script: dotnet test --configuration Release --no-build
