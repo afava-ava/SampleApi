@@ -10,11 +10,11 @@ public static class UserEndpoints
         app.MapGet("/users/{id}", GetUserById);
     }
 
-    private static IResult GetUsers(CourseData data, string search)
+    private static IResult GetUsers(CourseData data)
     {
-        // var results = data.Users;
-        var results = data.Users.Where(x => x.Name.First.Contains(search, StringComparison.OrdinalIgnoreCase)
-                                       || x.Name.Last.Contains(search, StringComparison.OrdinalIgnoreCase));
+        var results = data.Users;
+        // var results = data.Users.Where(x => x.Name.First.Contains(search, StringComparison.OrdinalIgnoreCase)
+        //                                || x.Name.Last.Contains(search, StringComparison.OrdinalIgnoreCase));
 
         if (results is null)
         {
