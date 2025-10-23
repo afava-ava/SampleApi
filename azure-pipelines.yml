@@ -8,8 +8,8 @@ steps:
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
-      version: '8.x'
-    displayName: 'Instalar .NET 8 SDK'
+      version: '9.x'
+    displayName: 'Instalar .NET 9 SDK'
 
   - task: Cache@2
     inputs:
