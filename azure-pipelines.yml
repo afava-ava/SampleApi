@@ -11,14 +11,6 @@ steps:
       version: '9.x'
     displayName: 'Instalar .NET 9 SDK'
 
-  - task: Cache@2
-    inputs:
-      key: 'nuget | "$(Agent.OS)" | **/*.csproj'
-      restoreKeys: |
-        nuget | "$(Agent.OS)"
-      path: ~/.nuget/packages
-    displayName: 'Cachear paquetes NuGet'
-
   - script: dotnet restore
     displayName: 'Restaurar dependencias'
 
