@@ -1,0 +1,75 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ main ]        # Ejecuta el pipeline automáticamente cuando hay cambios en la rama 'main'
+  pull_request:
+    branches: [ main ]        # Ejecuta el pipeline cuando se abre un Pull Request hacia 'main'
+
+env:
+  AZURE_WEBAPP_NAME: 'sample-api-ava'
+  AZURE_WEBAPP_PACKAGE_PATH: './SampleApiApp/publish'
+  SOLUTION_PATH: 'SampleApiApp.sln'
+  API_PROJECT_PATH: 'SampleApiApp/SampleApiApp.csproj'
+  PUBLISH_DIR: './publish'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest    # Usa una máquina virtual Ubuntu como agente de ejecución
+
+    steps:
+      # Descarga el código fuente del repositorio
+      - uses: actions/checkout@v4
+
+      - name: Cachear paquetes NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      # Instala el SDK de .NET 8.x en el agente
+      - name: Instalar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'   
+      
+      - name: Restaurar dependencias
+        run: dotnet restore
+
+      # Compila el proyecto en modo Release
+      - name: Compilar
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
+
+      # Ejecuta las pruebas del proyecto (sin recompilar)
+      - name: Ejecutar pruebas
+        run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build --verbosity normal
+
+      - name: Publicar aplicación
+        run: |
+          dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore --no-build --output ${{ env.PUBLISH_DIR }}
+      
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-package
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  deploy:
+    name: Deploy to Azure Web App
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+
+    steps:
+      # Descarga el código fuente del repositorio
+      - uses: actions/checkout@v4
+
+      # Usa la acción oficial de Azure para desplegar la aplicación web
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
