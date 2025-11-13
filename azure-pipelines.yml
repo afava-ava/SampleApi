@@ -8,21 +8,13 @@ steps:
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
-      version: '8.x'
-    displayName: 'Instalar .NET 8 SDK'
-
-  - task: Cache@2
-    inputs:
-      key: 'nuget | "$(Agent.OS)" | **/*.csproj'
-      restoreKeys: |
-        nuget | "$(Agent.OS)"
-      path: ~/.nuget/packages
-    displayName: 'Cachear paquetes NuGet'
+      version: '9.x'
+    displayName: 'Instalar .NET 9 SDK'
 
   - script: dotnet restore
     displayName: 'Restaurar dependencias'
 
-  - script: dotnet build --configuration Release --no-restore
+  - script: dotnet build --configuration Release
     displayName: 'Compilar proyecto'
 
   - script: dotnet test --configuration Release --no-build
