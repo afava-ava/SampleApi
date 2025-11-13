@@ -65,6 +65,9 @@ jobs:
     steps:
       # Descarga el código fuente del repositorio
       - uses: actions/checkout@v4
+        with:
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       # Usa la acción oficial de Azure para desplegar la aplicación web
       - name: 'Deploy to Azure Web App'
