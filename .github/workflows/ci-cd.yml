@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           name: webapp
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          path: ${{ env.PUBLISH_DIR }}
 
       # Usa la acción oficial de Azure para desplegar la aplicación web
       - name: 'Deploy to Azure Web App'
