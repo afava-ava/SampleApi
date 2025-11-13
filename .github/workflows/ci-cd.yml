@@ -10,7 +10,7 @@ env:
   AZURE_WEBAPP_NAME: 'sample-api-ava'
   AZURE_WEBAPP_PACKAGE_PATH: './SampleApiApp/publish'
   SOLUTION_PATH: 'SampleApiApp.sln'
-  API_PROJECT_PATH: 'SampleApiApp'
+  API_PROJECT_PATH: 'SampleApi'
   PUBLISH_DIR: './publish'
 
 jobs:
