@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             nuget-${{ runner.os }}-
 
-      # Instala el SDK de .NET 8.x en el agente
+      # Instala el SDK de .NET 9.x en el agente
       - name: Instalar .NET
         uses: actions/setup-dotnet@v4
         with:
