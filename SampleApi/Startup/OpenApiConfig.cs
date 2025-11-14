@@ -11,17 +11,13 @@ namespace SampleApi.Startup
 
         public static void UseOpenApi(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
+            app.MapOpenApi();
+            app.MapScalarApiReference(options =>
             {
-                app.MapOpenApi();
-                app.MapScalarApiReference(options =>
-                {
-                    options.Title = "The Sample API";
-                    options.Theme = ScalarTheme.Saturn;
-                    options.HideClientButton = true;
-                });
-
-            }
+                options.Title = "The Sample API";
+                options.Theme = ScalarTheme.Saturn;
+                options.HideClientButton = true;
+            });
         }
     }
 }

@@ -21,6 +21,14 @@ jobs:
       # Descarga el código fuente del repositorio
       - uses: actions/checkout@v4
 
+      - name: Cachear paquetes NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
       # Instala el SDK de .NET 9.x en el agente
       - name: Instalar .NET
         uses: actions/setup-dotnet@v4
@@ -40,8 +48,21 @@ jobs:
 
       - name: Publicar aplicación
         run: |
-          dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build
+          dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
+  deploy:
+    name: Deploy to Azure Web App
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+
+    steps:
+      # Descarga el código fuente del repositorio
+      - uses: actions/checkout@v4
+        with:
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      # Usa la acción oficial de Azure para desplegar la aplicación web
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         with:
