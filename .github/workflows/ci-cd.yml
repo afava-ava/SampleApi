@@ -21,14 +21,6 @@ jobs:
       # Descarga el código fuente del repositorio
       - uses: actions/checkout@v4
 
-      - name: Cachear paquetes NuGet
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
-
       # Instala el SDK de .NET 9.x en el agente
       - name: Instalar .NET
         uses: actions/setup-dotnet@v4
