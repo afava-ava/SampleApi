@@ -9,7 +9,7 @@ on:
 env:
   DOTNET_VERSION: '9.0.x'
   AZURE_WEBAPP_NAME: 'sample-api-ava'
-  SOLUTION_PATH: './SampleApiApp.sln'
+  SOLUTION_PATH: './SampleApi/SampleApi.csproj'
   AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Publicar aplicación
         run: |
-          dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build
+          dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     name: Deploy to Azure Web App
@@ -48,11 +48,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Descarga el código fuente del repositorio
-      - uses: actions/checkout@v4
-        with:
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
       # Usa la acción oficial de Azure para desplegar la aplicación web
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
